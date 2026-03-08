@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Games</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #1a0a2e;
+      font-family: 'Courier New', monospace;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 48px 16px;
+      color: #fff;
+    }
+    h1 {
+      font-size: 28px;
+      letter-spacing: 4px;
+      color: #FF9ECD;
+      text-shadow: 2px 2px 0 #8B0057;
+      margin-bottom: 8px;
+    }
+    .subtitle {
+      color: #C77DFF;
+      font-size: 13px;
+      letter-spacing: 2px;
+      margin-bottom: 48px;
+    }
+    .games {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+      justify-content: center;
+      max-width: 900px;
+    }
+    .card {
+      background: rgba(60, 0, 80, 0.7);
+      border: 3px solid #C77DFF;
+      border-radius: 4px;
+      width: 260px;
+      padding: 28px 24px 24px;
+      text-align: center;
+      text-decoration: none;
+      color: inherit;
+      transition: border-color 0.15s, transform 0.1s;
+      display: block;
+    }
+    .card:hover {
+      border-color: #FF9ECD;
+      transform: translateY(-3px);
+    }
+    .card-emoji { font-size: 48px; margin-bottom: 14px; }
+    .card-title {
+      font-size: 16px;
+      font-weight: bold;
+      letter-spacing: 2px;
+      color: #FF9ECD;
+      margin-bottom: 10px;
+    }
+    .card-desc { font-size: 12px; color: #D8B4FE; line-height: 1.6; }
+    .card-players {
+      margin-top: 14px;
+      font-size: 11px;
+      color: #74C0FC;
+      letter-spacing: 1px;
+    }
+    footer {
+      margin-top: 64px;
+      font-size: 11px;
+      color: #6B3088;
+      letter-spacing: 1px;
+    }
+  </style>
+</head>
+<body>
+  <h1>~* GAMES *~</h1>
+  <p class="subtitle">kies een spel</p>
+
+  <div class="games">
+    <a class="card" href="flappy-unicorn/">
+      <div class="card-emoji">🦄</div>
+      <div class="card-title">FLAPPY UNICORN</div>
+      <div class="card-desc">
+        Vlieg met je eenhoorn door buizen.
+        Twee levels: regenboog &amp; Minecraft.
+      </div>
+      <div class="card-players">3 spelers &bull; Floris &bull; Yune &bull; Lukas</div>
+    </a>
+  </div>
+
+  <footer>lukasvan3l &mdash; github.com/lukasvan3l/games</footer>
+</body>
+</html>

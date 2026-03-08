@@ -1,4 +1,4 @@
-# ~* Games *~
+# Games
 
 A collection of AI-generated game experiments made by [lukasvan3l](https://github.com/lukasvan3l) and his kids — Floris and Yune.
 

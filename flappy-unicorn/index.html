@@ -2,23 +2,62 @@
 <html lang="nl">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>Flappy Unicorn - 3 Spelers</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       background: #2a0a3a;
       display: flex; flex-direction: column; align-items: center;
-      justify-content: center; height: 100vh;
+      justify-content: center; min-height: 100dvh;
       font-family: 'Courier New', monospace; overflow: hidden;
     }
     h1 { color: #FF9ECD; margin-bottom: 6px; font-size: 18px; letter-spacing: 2px;
          text-shadow: 2px 2px 0 #8B0057; }
-    .controls-info { display: flex; gap: 20px; margin-bottom: 8px; font-size: 12px; }
+    .controls-info { display: flex; gap: 20px; margin-bottom: 8px; font-size: 12px;
+                     flex-wrap: wrap; justify-content: center; padding: 0 8px; }
     .p1-label { color: #FFD6EC; }
     .p2-label { color: #C77DFF; }
     .p3-label { color: #74C0FC; }
-    canvas { border: 4px solid #FF9ECD; border-radius: 4px; display: block;
-             box-shadow: 0 0 20px #FF9ECD66; }
+
+    /* Responsive canvas */
+    .canvas-wrap { position: relative; }
+    canvas {
+      border: 4px solid #FF9ECD; border-radius: 4px; display: block;
+      box-shadow: 0 0 20px #FF9ECD66;
+      width: min(480px, calc(100vw - 16px));
+      aspect-ratio: 480 / 560;
+    }
+
+    /* Touch overlay — two tap zones on the canvas */
+    .touch-overlay {
+      display: none;
+      position: absolute;
+      inset: 4px; /* sit inside the canvas border */
+      pointer-events: none;
+    }
+    .touch-zone {
+      position: absolute;
+      top: 0; bottom: 0; width: 50%;
+      display: flex; align-items: flex-end; justify-content: center;
+      padding-bottom: 14px;
+      pointer-events: auto;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none; -webkit-user-select: none;
+      touch-action: manipulation;
+    }
+    .touch-zone-left  { left: 0; }
+    .touch-zone-right { right: 0; }
+    .touch-label {
+      font-size: 11px; letter-spacing: 1px;
+      opacity: 0.45; pointer-events: none;
+    }
+
+    @media (hover: none) and (pointer: coarse) {
+      h1 { font-size: 15px; margin-bottom: 4px; }
+      .controls-info { display: none; }
+      .touch-overlay { display: block; }
+    }
   </style>
 </head>
 <body>
@@ -28,7 +67,17 @@
     <span class="p2-label">Yune (Paars): W</span>
     <span class="p3-label">Lukas (Roze): SPATIEBALK</span>
   </div>
-  <canvas id="gameCanvas" width="480" height="560"></canvas>
+  <div class="canvas-wrap">
+    <canvas id="gameCanvas" width="480" height="560"></canvas>
+    <div class="touch-overlay">
+      <div class="touch-zone touch-zone-left"  id="touchLeft">
+        <span class="touch-label" style="color:#FFD6EC">◄ FLORIS</span>
+      </div>
+      <div class="touch-zone touch-zone-right" id="touchRight">
+        <span class="touch-label" style="color:#C77DFF">YUNE ►</span>
+      </div>
+    </div>
+  </div>
 
   <script>
     const canvas = document.getElementById('gameCanvas');
@@ -130,6 +179,8 @@
       resetGame(); state = 'countdown'; countdownValue = 3; countdownTimer = 0; lastCountdownValue = -1;
     }
 
+    const isMobile = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+
     document.addEventListener('keydown', e => {
       if (!['ArrowUp','KeyW','Space'].includes(e.code)) return;
       e.preventDefault();
@@ -141,6 +192,22 @@
         if (e.code === 'Space')   flap(p3);
       }
     });
+
+    function handleTouchInput(bird) {
+      if (state === 'idle') { startCountdown(); return; }
+      if (state === 'gameover' && gameOverTimer >= GAMEOVER_DELAY) { startCountdown(); return; }
+      if (state === 'playing') flap(bird);
+    }
+
+    document.getElementById('touchLeft').addEventListener('touchstart', e => {
+      e.preventDefault();
+      handleTouchInput(p1);
+    }, { passive: false });
+
+    document.getElementById('touchRight').addEventListener('touchstart', e => {
+      e.preventDefault();
+      handleTouchInput(p2);
+    }, { passive: false });
 
     function flap(bird) {
       if (!bird.alive) return;
@@ -714,7 +781,8 @@
       drawScores();
 
       if (state === 'idle') {
-        drawUnicornBox('~* FLAPPY UNICORN *~', [], ['Druk PIJL, W of SPATIE om te starten']);
+        const startHint = isMobile ? 'Tik links of rechts om te starten' : 'Druk PIJL, W of SPATIE om te starten';
+        drawUnicornBox('~* FLAPPY UNICORN *~', [], [startHint]);
       } else if (state === 'countdown') {
         drawCountdown();
       } else if (state === 'gameover') {
@@ -727,7 +795,7 @@
         const winText = ws.length > 1 ? 'Gelijkspel!' : `${ws[0]} wint!`;
         const canRestart = gameOverTimer >= GAMEOVER_DELAY;
         const restartLine = canRestart
-          ? 'Druk PIJL, W of SPATIE opnieuw'
+          ? (isMobile ? 'Tik om opnieuw te spelen' : 'Druk PIJL, W of SPATIE opnieuw')
           : `Wacht ${Math.ceil((GAMEOVER_DELAY - gameOverTimer) / 60)}s...`;
         drawUnicornBox('GAME OVER', [winText], [
           `Floris:${p1.score}  Yune:${p2.score}  Lukas:${p3.score}`,

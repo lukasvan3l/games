@@ -1,0 +1,15 @@
+{
+  // games.3l.nl: statische site, alleen assets uit public/ (geen Worker-code).
+  // Deployen: push naar main (Cloudflare Workers Builds draait `npx wrangler deploy`).
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "games",
+  // Privé-account van Lukas, waar de zone 3l.nl staat.
+  "account_id": "1742bee7de7eed30e1381b5b0c76e9c4",
+  "compatibility_date": "2026-09-01",
+  "routes": [ { "pattern": "games.3l.nl", "custom_domain": true } ],
+  "workers_dev": true,
+  "preview_urls": false,
+  "assets": {
+    "directory": "./public"
+  }
+}

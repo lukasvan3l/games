@@ -20,4 +20,4 @@ Made together with Floris, Yune, and Lukas.
 
 This repo is a playground for AI-assisted game experiments. We prompt, Claude codes, we play, we tweak. New games get added whenever inspiration strikes.
 
-Built with vanilla HTML, CSS, and JavaScript. Hosted on GitHub Pages.
+Built with vanilla HTML, CSS, and JavaScript. Hosted on Cloudflare Workers (static assets in `public/`); a push to `main` deploys via Workers Builds.
